@@ -41,6 +41,7 @@ class BaseHTTP
 {
     protected $host;
     protected $port;
+    protected $ssl;
     protected $user;
     protected $pass;
     protected $base;
@@ -60,6 +61,7 @@ class BaseHTTP
         $this->pass   = $c->pass;
         $this->port   = $c->port;
         $this->host   = $c->host;
+	$this->ssl    = $c->ssl;
         $this->timePrecision = $c->timePrecision;
         $c->children[] = $this;
     }
@@ -67,7 +69,7 @@ class BaseHTTP
     protected function getCurl($url, array $args = array())
     {
         $args = array_merge($args, array('u' => $this->user, 'p' => $this->pass));
-        $url  = "http://{$this->host}:{$this->port}/{$this->base}{$url}";
+        $url  = "http". ($this->ssl ? 's':'') ."://{$this->host}:{$this->port}/{$this->base}{$url}";
         $url .= "?" . http_build_query($args);
         $ch   = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
